@@ -32,14 +32,20 @@ class ChirpController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request): RedirectResponse
-        {
+    {
+        if ($request->user()->chirps()->count() > 10) {
+            return redirect('/chirps')->with('error', 'Vous ne devez pas depasser 10 chirps');
+        }
+        
         $validated = $request->validate([
             'message' => 'required|string|max:255',
         ]);
  
         $request->user()->chirps()->create($validated);
+
  
-        return redirect(route('chirps.index'));    }
+        return redirect(route('chirps.index'));
+    }
 
     /**
      * Display the specified resource.
