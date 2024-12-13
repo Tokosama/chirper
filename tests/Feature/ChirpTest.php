@@ -105,4 +105,19 @@ class ChirpTest extends TestCase
         $responseDelete = $this->delete("/chirps/{$chirp->id}");
         $responseDelete->assertStatus(403);
     }
+
+    // exercice 7
+    public function test_un_chirp_mis_a_jour_ne_peut_pas_avoir_un_contenu_vide()
+    {
+        $utilisateur = User::factory()->create();
+        $chirp = Chirp::factory()->create(['user_id' => $utilisateur->id]);
+
+        $this->actingAs($utilisateur);
+
+        $response = $this->put("/chirps/{$chirp->id}", [
+            'message' => '',
+        ]);
+
+        $response->assertSessionHasErrors(['message']);
+    }
 }
