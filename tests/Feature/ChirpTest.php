@@ -120,4 +120,22 @@ class ChirpTest extends TestCase
 
         $response->assertSessionHasErrors(['message']);
     }
+
+    public function test_un_chirp_mis_a_jour_ne_peut_pas_depasse_255_caracteres()
+    {
+        $utilisateur = User::factory()->create();
+        $chirp = Chirp::factory()->create(['user_id' => $utilisateur->id]);
+
+        $this->actingAs($utilisateur);
+
+        $response = $this->put("/chirps/{$chirp->id}", [
+            'message' => str_repeat('a', 256),
+        ]);
+
+        $response->assertSessionHasErrors(['message']);
+    }
+
+    //exercice 3
+
+    
 }
